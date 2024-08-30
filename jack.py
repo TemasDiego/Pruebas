@@ -47,8 +47,8 @@ def jugar_21():
     valor_j = calcular(mano_J)
     if valor_j > 21:
         print("Te pasaste de 21, juego perdido")
-        print(f"Mano de la CPU: {mano_CPU} (valor: {calcular(mano_CPU)})")  # Mostrar la mano de la CPU
-        return False  # Indicar que el jugador ha perdido
+        print(f"Mano de la CPU: {mano_CPU} (valor: {calcular(mano_CPU)})")  
+        return False  # 
 
     # La CPU juega después de que el jugador decide quedarse
     while calcular(mano_CPU) < 17:
@@ -66,7 +66,7 @@ def jugar_21():
         return False
     else:
         print("Es un empate")
-        return None  # Indicar que ha habido un empate
+        return None  #
 
 while True:
     d = input("Escriba 1 para sí y 2 para no: ")
@@ -75,24 +75,24 @@ while True:
         print("Ok, gracias por su participación")
         break  # Salir del bucle principal
     elif d == "1":
-        while True:  # Bucle para manejar los juegos múltiples
+        while True:  
             print("Comencemos a jugar")
-            resultado = jugar_21()  # Ejecutar el juego y obtener el resultado
+            resultado = jugar_21()  
             
             if resultado is None:
-                # Si el resultado es empate, volver a preguntar si desea jugar otra vez
+         
                 print("¿Desea jugar otra vez? (1 para sí, 2 para no)")
-            elif not resultado:  # Si el jugador ha perdido
+            elif not resultado:  
                 print("Fin del juego. ¿Desea jugar otra vez? (1 para sí, 2 para no)")
-            else:  # Si el jugador ha ganado
+            else: 
                 print("¿Desea jugar otra vez? (1 para sí, 2 para no)")
             
             d = input("Escriba 1 para sí y 2 para no: ")
             if d == "2":
                 print("Ok, gracias por su participación")
-                break  # Salir del bucle principal
+                break  
             elif d != "1":
                 print("Número no válido, saliendo del juego.")
-                break  # Salir del bucle principal
+                break  
     else:
         print("Número no válido, intente nuevamente.")
