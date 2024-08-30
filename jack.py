@@ -44,25 +44,29 @@ def jugar_21():
         else:
             print("Acción no válida, intente nuevamente.")
     
-    if calcular(mano_J) > 21:
+    valor_j = calcular(mano_J)
+    if valor_j > 21:
         print("Te pasaste de 21, juego perdido")
+        print(f"Mano de la CPU: {mano_CPU} (valor: {calcular(mano_CPU)})")  # Mostrar la mano de la CPU
         return False  # Indicar que el jugador ha perdido
 
     # La CPU juega después de que el jugador decide quedarse
-    print(f"Mano de la CPU: {mano_CPU} (valor: {calcular(mano_CPU)})")
     while calcular(mano_CPU) < 17:
         mano_CPU.append(repartir(baraja))
-        print(f"La CPU toma una carta: {mano_CPU} (valor: {calcular(mano_CPU)})")
     
-    if calcular(mano_CPU) > 21:
-        print("La CPU se pasó de 21, ganaste")
-        return True  # Indicar que el jugador ha ganado
-    elif calcular(mano_CPU) >= calcular(mano_J):
-        print("La CPU gana")
-        return False  # Indicar que el jugador ha perdido
+    valor_cpu = calcular(mano_CPU)
+    
+    print(f"Mano de la CPU: {mano_CPU} (valor: {valor_cpu})")
+    
+    if valor_cpu > 21 or valor_j > valor_cpu:
+        print(f"Ganaste con {valor_j} puntos contra {valor_cpu} de la CPU")
+        return True
+    elif valor_j < valor_cpu:
+        print(f"Perdiste con {valor_j} puntos contra {valor_cpu} de la CPU")
+        return False
     else:
-        print("Ganaste")
-        return True  # Indicar que el jugador ha ganado
+        print("Es un empate")
+        return None  # Indicar que ha habido un empate
 
 while True:
     d = input("Escriba 1 para sí y 2 para no: ")
@@ -71,8 +75,24 @@ while True:
         print("Ok, gracias por su participación")
         break  # Salir del bucle principal
     elif d == "1":
-        print("Comencemos a jugar")
-        if not jugar_21():  # Si el jugador ha perdido, salir del bucle principal
-            continue  # Volver a preguntar si desea jugar otra vez
+        while True:  # Bucle para manejar los juegos múltiples
+            print("Comencemos a jugar")
+            resultado = jugar_21()  # Ejecutar el juego y obtener el resultado
+            
+            if resultado is None:
+                # Si el resultado es empate, volver a preguntar si desea jugar otra vez
+                print("¿Desea jugar otra vez? (1 para sí, 2 para no)")
+            elif not resultado:  # Si el jugador ha perdido
+                print("Fin del juego. ¿Desea jugar otra vez? (1 para sí, 2 para no)")
+            else:  # Si el jugador ha ganado
+                print("¿Desea jugar otra vez? (1 para sí, 2 para no)")
+            
+            d = input("Escriba 1 para sí y 2 para no: ")
+            if d == "2":
+                print("Ok, gracias por su participación")
+                break  # Salir del bucle principal
+            elif d != "1":
+                print("Número no válido, saliendo del juego.")
+                break  # Salir del bucle principal
     else:
         print("Número no válido, intente nuevamente.")
