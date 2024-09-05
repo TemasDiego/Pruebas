@@ -1,7 +1,6 @@
 import random
-
-print("Hola mundo")
-print("¿Desea jugar 21?")
+n = input("Por favor ingrese su nombre")
+print(f"{n }¿Desea jugar 21?")
 
 def calcular(mano):
     valor = 0
@@ -31,14 +30,14 @@ def jugar_21():
     baraja = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "K", "Q", "A"]
     mano_J = [repartir(baraja), repartir(baraja)]
     mano_CPU = [repartir(baraja), repartir(baraja)]
-    print(f"Tu mazo: {mano_J} (valor: {calcular(mano_J)})")
+    print(f"mano de {n}: {mano_J} (valor: {calcular(mano_J)})")
     print(f"Carta visible de la CPU: {mano_CPU[0]}")
     
     while calcular(mano_J) < 21:
         accion = input("¿Desea pedir otra carta (P) o quedarse (Q)? ").lower()
         if accion == 'p':
             mano_J.append(repartir(baraja))
-            print(f"Tu mazo: {mano_J} (valor: {calcular(mano_J)})")
+            print(f"mazo de {n}: {mano_J} (valor: {calcular(mano_J)})")
         elif accion == 'q':
             break
         else:
@@ -46,7 +45,7 @@ def jugar_21():
     
     valor_j = calcular(mano_J)
     if valor_j > 21:
-        print("Te pasaste de 21, juego perdido")
+        print(f"{n}Te pasaste de 21, juego perdido")
         print(f"Mano de la CPU: {mano_CPU} (valor: {calcular(mano_CPU)})")  
         return False  # 
 
@@ -59,10 +58,10 @@ def jugar_21():
     print(f"Mano de la CPU: {mano_CPU} (valor: {valor_cpu})")
     
     if valor_cpu > 21 or valor_j > valor_cpu:
-        print(f"Ganaste con {valor_j} puntos contra {valor_cpu} de la CPU")
+        print(f"{n}Ganaste con {valor_j} puntos contra {valor_cpu} de la CPU")
         return True
     elif valor_j < valor_cpu:
-        print(f"Perdiste con {valor_j} puntos contra {valor_cpu} de la CPU")
+        print(f"{n}Perdiste con {valor_j} puntos contra {valor_cpu} de la CPU")
         return False
     else:
         print("Es un empate")
@@ -78,14 +77,13 @@ while True:
         while True:  
             print("Comencemos a jugar")
             resultado = jugar_21()  
-            
             if resultado is None:
          
-                print("¿Desea jugar otra vez? (1 para sí, 2 para no)")
+                print(f"{n}¿Desea jugar otra vez? (1 para sí, 2 para no)")
             elif not resultado:  
-                print("Fin del juego. ¿Desea jugar otra vez? (1 para sí, 2 para no)")
+                print(f"Fin del juego. ¿Desea jugar otra vez {n}? (1 para sí, 2 para no)")
             else: 
-                print("¿Desea jugar otra vez? (1 para sí, 2 para no)")
+                print(f"¿Desea jugar otra vez {n}? (1 para sí, 2 para no)")
             
             d = input("Escriba 1 para sí y 2 para no: ")
             if d == "2":
