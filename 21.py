@@ -1,78 +1,126 @@
 import random
 
-print("Hola mundo")
-print("¿Desea jugar 21?")
+class Baraja:
+    def __init__(self):
+        self.cartas = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "K", "Q", "A"] * 4
+        random.shuffle(self.cartas)  
 
-def calcular(mano):
-    valor = 0
-    ases = 0
+    def repartir(self):
+        if not self.cartas:
+            return None 
+        return self.cartas.pop()
 
-    for carta in mano:
-        if carta in ["J", "K", "Q"]:
-            valor += 10
-        elif carta == "A":
-            ases += 1
-            valor += 11
+class Jugador:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.mano = []
+
+    def agregar_carta(self, carta):
+        self.mano.append(carta)
+
+    def calcular_valor(self):
+        valor = 0
+        ases = 0
+
+        for carta in self.mano:
+            if carta in ["J", "K", "Q"]:
+                valor += 10
+            elif carta == "A":
+                ases += 1
+                valor += 11
+            else:
+                valor += int(carta)
+        
+        while valor > 21 and ases:
+            valor -= 10
+            ases -= 1
+        
+        return valor
+
+    def __str__(self):
+        return f"{self.nombre}: {self.mano} (valor: {self.calcular_valor()})"
+
+class Juego21:
+    def __init__(self, nombre_jugador):
+        self.baraja = Baraja()
+        self.jugador = Jugador(nombre_jugador)
+        self.cpu = Jugador("CPU")
+
+    def repartir_cartas_iniciales(self):
+        for _ in range(1):  
+            self.jugador.agregar_carta(self.baraja.repartir())
+            self.cpu.agregar_carta(self.baraja.repartir())
+
+    def jugar_turno_jugador(self):
+        while self.jugador.calcular_valor() < 21:
+            accion = input("¿Desea pedir otra carta (P) o quedarse (Q)? ").lower()
+            if accion == 'p':
+                self.jugador.agregar_carta(self.baraja.repartir())
+                print(self.jugador)
+            elif accion == 'q':
+                break
+            else:
+                print("Acción no válida, intente nuevamente.")
+        
+    def jugar_turno_cpu(self):
+        while self.cpu.calcular_valor() < 17:
+            self.cpu.agregar_carta(self.baraja.repartir())
+    
+    def determinar_ganador(self):
+        valor_jugador = self.jugador.calcular_valor()
+        valor_cpu = self.cpu.calcular_valor()
+        
+        if valor_jugador > 21:
+            print(f"{self.jugador.nombre} se pasó de 21. Juego perdido.")
+            return False
+
+        print(self.cpu)
+        
+        if valor_cpu > 21 or valor_jugador > valor_cpu:
+            print(f"{self.jugador.nombre} ganó con {valor_jugador} puntos contra {valor_cpu} de la CPU.")
+            return True
+        elif valor_jugador < valor_cpu:
+            print(f"{self.jugador.nombre} perdió con {valor_jugador} puntos contra {valor_cpu} de la CPU.")
+            return False
         else:
-            valor += int(carta)
-    
-    while valor > 21 and ases:
-        valor -= 10
-        ases -= 1
-    
-    return valor
+            print("Es un empate.")
+            return None
 
-def repartir(baraja):
-    carta = random.choice(baraja)
-    baraja.remove(carta)
-    return carta
+def main():
+    nombre_jugador = input("Por favor ingrese su nombre: ")
+    print(f"{nombre_jugador}, ¿Desea jugar 21?")
 
-def jugar_21():
-    baraja = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "K", "Q", "A"]
-    mano_J = [repartir(baraja)]
-    mano_CPU = [repartir(baraja)]
-    print(f"Tu mazo: {mano_J} (valor: {calcular(mano_J)})")
-    print(f"Carta visible de la CPU: {mano_CPU[0]}")
-    
-    while calcular(mano_J) < 21:
-        accion = input("¿Desea pedir otra carta (P) o quedarse (Q)? ").lower()
-        if accion == 'p':
-            mano_J.append(repartir(baraja))
-            print(f"Tu mazo: {mano_J} (valor: {calcular(mano_J)})")
-        elif accion == 'q':
+    while True:
+        d = input("Escriba 1 para sí y 2 para no: ")
+        if d == "2":
+            print("Ok, gracias por su participación.")
             break
+        elif d == "1":
+            while True:
+                juego = Juego21(nombre_jugador)
+                juego.repartir_cartas_iniciales()
+                print(juego.jugador)
+                print(f"Carta visible de la CPU: {juego.cpu.mano[0]}")
+                
+                juego.jugar_turno_jugador()
+                resultado = juego.determinar_ganador()
+
+                if resultado is None:
+                    print(f"{nombre_jugador}, ¿Desea jugar otra vez? (1 para sí, 2 para no)")
+                elif not resultado:
+                    print(f"Fin del juego. ¿Desea jugar otra vez {nombre_jugador}? (1 para sí, 2 para no)")
+                else:
+                    print(f"¿Desea jugar otra vez {nombre_jugador}? (1 para sí, 2 para no)")
+                
+                d = input("Escriba 1 para sí y 2 para no: ")
+                if d == "2":
+                    print("Ok, gracias por su participación.")
+                    break
+                elif d != "1":
+                    print("Número no válido, saliendo del juego.")
+                    break
         else:
-            print("Acción no válida, intente nuevamente.")
-    
-    if calcular(mano_J) > 21:
-        print("Te pasaste de 21, juego perdido")
-        return False  # Indicar que el jugador ha perdido
+            print("Número no válido, intente nuevamente.")
 
-    # La CPU juega después de que el jugador decide quedarse
-    print(f"Mano de la CPU: {mano_CPU} (valor: {calcular(mano_CPU)})")
-    while calcular(mano_CPU) < 17:
-        mano_CPU.append(repartir(baraja))
-        print(f"La CPU toma una carta: {mano_CPU} (valor: {calcular(mano_CPU)})")
-    
-    if calcular(mano_CPU) > 21:
-        print("La CPU se pasó de 21, ganaste")
-        return True  # Indicar que el jugador ha ganado
-    elif calcular(mano_CPU) >= calcular(mano_J):
-        print("La CPU gana")
-        return False  # Indicar que el jugador ha perdido
-    else:
-        print("Ganaste")
-        return True  # Indicar que el jugador ha ganado
-
-while True:
-    d = input("Escriba 1 para sí y 2 para no: ")
-    
-    if d == "2":
-        print("Ok, gracias por su participación")
-        break  # Salir del bucle principal
-    elif d == "1":
-        print("Comencemos a jugar")
-        if not jugar_21():  # Si el jugador ha perdido, salir del bucle principal
-            continue  # Volver a preguntar si desea jugar otra vez
-    else:
-        print("Número no válido, intente nuevamente.")
+if __name__ == "__main__":
+    main()
