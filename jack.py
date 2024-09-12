@@ -30,30 +30,30 @@ def jugar_21():
     baraja = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "K", "Q", "A"]
     mano_J = [repartir(baraja), repartir(baraja)]
     mano_CPU = [repartir(baraja), repartir(baraja)]
-    print(f"mano de {n}: {mano_J} (valor: {calcular(mano_J)})")
+    print(f"mano de {n}: {mano_J} (valor: {calcular_mano(mano_J)})")
     print(f"Carta visible de la CPU: {mano_CPU[0]}")
     
-    while calcular(mano_J) < 21:
+    while calcular_mano(mano_J) < 21:
         accion = input("¿Desea pedir otra carta (P) o quedarse (Q)? ").lower()
         if accion == 'p':
             mano_J.append(repartir(baraja))
-            print(f"mazo de {n}: {mano_J} (valor: {calcular(mano_J)})")
+            print(f"mazo de {n}: {mano_J} (valor: {calcular_mano(mano_J)})")
         elif accion == 'q':
             break
         else:
             print("Acción no válida, intente nuevamente.")
     
-    valor_j = calcular(mano_J)
+    valor_j = calcular_mano(mano_J)
     if valor_j > 21:
         print(f"{n}Te pasaste de 21, juego perdido")
-        print(f"Mano de la CPU: {mano_CPU} (valor: {calcular(mano_CPU)})")  
+        print(f"Mano de la CPU: {mano_CPU} (valor: {calcular_mano(mano_CPU)})")  
         return False  # 
 
     # La CPU juega después de que el jugador decide quedarse
-    while calcular(mano_CPU) < 17:
+    while calcular_mano(mano_CPU) < 17:
         mano_CPU.append(repartir(baraja))
     
-    valor_cpu = calcular(mano_CPU)
+    valor_cpu = calcular_mano(mano_CPU)
     
     print(f"Mano de la CPU: {mano_CPU} (valor: {valor_cpu})")
     
