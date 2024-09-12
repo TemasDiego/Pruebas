@@ -2,7 +2,7 @@ import random
 n = input("Por favor ingrese su nombre")
 print(f"{n }¿Desea jugar 21?")
 
-def calcular(mano):
+def calcular_mano(mano):
     valor = 0
     ases = 0
 

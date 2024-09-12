@@ -5,7 +5,7 @@ class Baraja:
         self.cartas = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "K", "Q", "A"] * 4
         random.shuffle(self.cartas)  
 
-    def repartir(self):
+    def repartir_carta(self):
         if not self.cartas:
             return None 
         return self.cartas.pop()
@@ -48,14 +48,14 @@ class Juego21:
 
     def repartir_cartas_iniciales(self):
         for _ in range(1):  
-            self.jugador.agregar_carta(self.baraja.repartir())
-            self.cpu.agregar_carta(self.baraja.repartir())
+            self.jugador.agregar_carta(self.baraja.repartir_carta())
+            self.cpu.agregar_carta(self.baraja.repartir_carta())
 
     def jugar_turno_jugador(self):
         while self.jugador.calcular_valor() < 21:
             accion = input("¿Desea pedir otra carta (P) o quedarse (Q)? ").lower()
             if accion == 'p':
-                self.jugador.agregar_carta(self.baraja.repartir())
+                self.jugador.agregar_carta(self.baraja.repartir_carta())
                 print(self.jugador)
             elif accion == 'q':
                 break
@@ -64,7 +64,7 @@ class Juego21:
         
     def jugar_turno_cpu(self):
         while self.cpu.calcular_valor() < 17:
-            self.cpu.agregar_carta(self.baraja.repartir())
+            self.cpu.agregar_carta(self.baraja.repartir_carta())
     
     def determinar_ganador(self):
         valor_jugador = self.jugador.calcular_valor()
