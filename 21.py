@@ -29,8 +29,8 @@ def repartir(baraja):
 
 def jugar_21():
     baraja = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "K", "Q", "A"]
-    mano_J = [repartir(baraja), repartir(baraja)]
-    mano_CPU = [repartir(baraja), repartir(baraja)]
+    mano_J = [repartir(baraja)]
+    mano_CPU = [repartir(baraja)]
     print(f"Tu mazo: {mano_J} (valor: {calcular(mano_J)})")
     print(f"Carta visible de la CPU: {mano_CPU[0]}")
     
