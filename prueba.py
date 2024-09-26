@@ -47,7 +47,7 @@ class Juego21:
         self.cpu = Jugador("CPU")
 
     def repartir_cartas_iniciales(self):
-        for _ in range(1):  # Reparte 2 cartas inicialmente a cada jugador
+        for _ in range(1):  
             self.baraja.agregar_carta(self.jugador.mano, self.baraja.repartir_carta())
             self.baraja.agregar_carta(self.cpu.mano, self.baraja.repartir_carta())
 
