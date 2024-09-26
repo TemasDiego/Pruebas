@@ -1,26 +1,23 @@
 import random
 
-
 class Baraja:
     def __init__(self):
         self.cartas = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "K", "Q", "A"] * 4
-              
-        random.shuffle(self.cartas)  
-            
+        random.shuffle(self.cartas)
+        
     def repartir_carta(self):
-         
         if not self.cartas:
             return None 
         return self.cartas.pop()
-    def agregar_carta(self, carta):
-        self.mano = []
-        self.mano.append(carta)
+    
+    def agregar_carta(self, mano, carta):
+        mano.append(carta)
 
-    def calcular_valor(self):
+    def calcular_valor(self, mano):
         valor = 0
         ases = 0
 
-        for carta in self.mano:
+        for carta in mano:
             if carta in ["J", "K", "Q"]:
                 valor += 10
             elif carta == "A":
@@ -37,13 +34,11 @@ class Baraja:
 
 class Jugador:
     def __init__(self, nombre):
-        Jugador.nombre = nombre
+        self.nombre = nombre
+        self.mano = []
+
     def __str__(self):
-        return f"{self.nombre}: {self.Baraja.mano} (valor: {self.Baraja.calcular_valor()})"
-
-
-     
-
+        return f"{self.nombre}: {self.mano}"
 
 class Juego21:
     def __init__(self, nombre_jugador):
@@ -52,34 +47,37 @@ class Juego21:
         self.cpu = Jugador("CPU")
 
     def repartir_cartas_iniciales(self):
-        for _ in range(1):  
-            self.baraja.agregar_carta(self.baraja.repartir_carta())
-            self.baraja.agregar_carta(self.baraja.repartir_carta())
+        for _ in range(1):  # Reparte 2 cartas inicialmente a cada jugador
+            self.baraja.agregar_carta(self.jugador.mano, self.baraja.repartir_carta())
+            self.baraja.agregar_carta(self.cpu.mano, self.baraja.repartir_carta())
 
     def jugar_turno_jugador(self):
-        while self.baraja.calcular_valor() < 21:
+        while self.baraja.calcular_valor(self.jugador.mano) < 21:
             accion = input("¿Desea pedir otra carta (P) o quedarse (Q)? ").lower()
             if accion == 'p':
-                self.baraja.agregar_carta(self.baraja.repartir_carta())
-                print(self.baraja)
+                carta = self.baraja.repartir_carta()
+                self.baraja.agregar_carta(self.jugador.mano, carta)
+                print(f"Carta recibida: {carta}")
+                print(f"Mano actual: {self.jugador.mano} (valor: {self.baraja.calcular_valor(self.jugador.mano)})")
             elif accion == 'q':
                 break
             else:
                 print("Acción no válida, intente nuevamente.")
-        
+
     def jugar_turno_cpu(self):
-        while self.baraja.calcular_valor() < 17:
-            self.baraja.agregar_carta(self.baraja.repartir_carta())
-    
+        while self.baraja.calcular_valor(self.cpu.mano) < 17:
+            carta = self.baraja.repartir_carta()
+            self.baraja.agregar_carta(self.cpu.mano, carta)
+
     def determinar_ganador(self):
-        valor_jugador = self.baraja.calcular_valor()
-        valor_cpu = self.baraja.calcular_valor()
-        
+        valor_jugador = self.baraja.calcular_valor(self.jugador.mano)
+        valor_cpu = self.baraja.calcular_valor(self.cpu.mano)
+
         if valor_jugador > 21:
             print(f"{self.jugador.nombre} se pasó de 21. Juego perdido.")
             return False
 
-        print(self.cpu)
+        print(f"Mano de la CPU: {self.cpu.mano} (valor: {valor_cpu})")
         if valor_cpu > 21 or valor_jugador > valor_cpu:
             print(f"{self.jugador.nombre} ganó con {valor_jugador} puntos contra {valor_cpu} de la CPU.")
             return True
@@ -104,9 +102,10 @@ def main():
                 juego = Juego21(nombre_jugador)
                 juego.repartir_cartas_iniciales()
                 print(juego.jugador)
-                print(f"Carta visible de la CPU: {juego.baraja.mano[0]}")
+                print(f"Carta visible de la CPU: {juego.cpu.mano[0]}")
                 
                 juego.jugar_turno_jugador()
+                juego.jugar_turno_cpu()
                 resultado = juego.determinar_ganador()
 
                 if resultado is None:
