@@ -1,4 +1,9 @@
 import random
+class Jugador:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.mano = []
+
 
 class Baraja:
     def __init__(self):
@@ -9,12 +14,6 @@ class Baraja:
         if not self.cartas:
             return None 
         return self.cartas.pop()
-
-class Jugador:
-    def __init__(self, nombre):
-        self.nombre = nombre
-        self.mano = []
-
     def agregar_carta(self, carta):
         self.mano.append(carta)
 
@@ -39,6 +38,8 @@ class Jugador:
 
     def __str__(self):
         return f"{self.nombre}: {self.mano} (valor: {self.calcular_valor()})"
+
+
 
 class Juego21:
     def __init__(self, nombre_jugador):
@@ -75,7 +76,6 @@ class Juego21:
             return False
 
         print(self.cpu)
-        
         if valor_cpu > 21 or valor_jugador > valor_cpu:
             print(f"{self.jugador.nombre} ganó con {valor_jugador} puntos contra {valor_cpu} de la CPU.")
             return True
